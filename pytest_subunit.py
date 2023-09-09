@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # inspired by https://github.com/Frozenball/pytest-sugar
 import datetime
+import io
 import os
 import re
 
 from subunit import StreamResultToBytes
 
-import py
 import pytest
+from _pytest._io import TerminalWriter
 from _pytest.terminal import TerminalReporter
 
 
@@ -119,24 +120,24 @@ class SubunitTerminalReporter(TerminalReporter):
         now = datetime.datetime.now(utc)
 
         # capture output
-        writer=py.io.TerminalWriter(stringio=True)
-        try:
-            report.toterminal(writer)
-        except:
-            pass
-        writer.stringio.seek(0)
-        out = writer.stringio.read()
-        out = out.encode("utf-8")
+        out = io.StringIO()
+        writer = TerminalWriter(out)
+        report.toterminal(writer)
+
+        writer.flush()
 
         # send status
         self.result.status(test_id=test_id,
                            test_status=status,
                            timestamp=now,
                            file_name=report.fspath,
-                           file_bytes=out,
+                           file_bytes=out.getvalue().encode('utf8'),
                            mime_type="text/plain; charset=utf8")
 
     def pytest_collectreport(self, report):
+        pass
+
+    def pytest_runtest_logfinish(self, nodeid: str) -> None:
         pass
 
     def pytest_collection_finish(self, session):
