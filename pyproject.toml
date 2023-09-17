@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pytest-subunit"
+description = "pytest-subunit is a plugin for py.test which outputs testsresult in subunit format."
+version = "0.0.10"
+license = {text = "Apache 2"}
+authors = [{name = "Łukasz Oleś", email = "loles@mirantis.com"}]
+maintainers = [{name = "Jelmer Vernooĳ", email = "jelmer@jelmer.uk"}]
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS :: MacOS X",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+readme = "README.rst"
+dependencies = [
+    "pytest>=2.3",
+    "python-subunit>=1.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/jelmer/pytest-subunit"
+
+[project.entry-points]
+pytest11 = {subunit = "pytest_subunit"}
+
+[tool.setuptools]
+py-modules = ["pytest_subunit"]
+zip-safe = false
+include-package-data = true
+platforms = ["any"]
