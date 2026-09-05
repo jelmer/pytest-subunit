@@ -153,7 +153,9 @@ class SubunitTerminalReporter(TerminalReporter):
         pass
 
     def pytest_sessionstart(self, session):
-        pass
+        # Set self._session
+        # https://github.com/pytest-dev/pytest/blob/58cf20edf08d84c5baf08f0566cc9bccbc4ec7fd/src/_pytest/terminal.py#L692
+        self._session = session
 
     def pytest_runtest_logstart(self, nodeid, location):
         pass
@@ -204,10 +206,14 @@ class SubunitTerminalReporter(TerminalReporter):
 
     def summary_failures(self):
         # Prevent failure summary from being shown since we already
-        # show the failure instantly after failure has occured.
+        # show the failure instantly after failure has occurred.
         pass
 
     def summary_errors(self):
         # Prevent error summary from being shown since we already
-        # show the error instantly after error has occured.
+        # show the error instantly after error has occurred.
         pass
+
+    def _determine_show_progress_info(self):
+        # Never show progress bar
+        return False
