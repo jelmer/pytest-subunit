@@ -102,6 +102,12 @@ class UTC(datetime.tzinfo):
 utc = UTC()
 
 
+def _is_strict_xpass(report):
+    """Detect a strict xfail marker whose test unexpectedly passed."""
+    return (report.outcome == 'failed'
+            and str(report.longrepr).startswith('[XPASS(strict)]'))
+
+
 class SubunitTerminalReporter(TerminalReporter):
     def __init__(self, reporter):
         TerminalReporter.__init__(self, reporter.config)
@@ -183,6 +189,12 @@ class SubunitTerminalReporter(TerminalReporter):
                     self._status(report, 'xfail')
                 elif report.failed:
                     self._status(report, 'uxsuccess')
+                    self.failed.append(test_id)
+            elif _is_strict_xpass(report):
+                # A strict xfail that passes is reported as a plain failure,
+                # without the wasxfail attribute.
+                self._status(report, 'uxsuccess')
+                self.failed.append(test_id)
             elif report.outcome == 'failed':
                 self._status(report, 'fail')
                 self.failed.append(test_id)
