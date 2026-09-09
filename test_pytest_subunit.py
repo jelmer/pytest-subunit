@@ -179,7 +179,7 @@ def test_no_subunit_flag_uses_default_reporter(pytester):
     assert b"1 passed" in stdout
 
 
-def test_subunit_load_list_filters_items(pytester, tmp_path):
+def test_subunit_load_list_filters_items(pytester):
     pytester.makepyfile(
         test_load_list="""
         def test_one():
@@ -190,7 +190,10 @@ def test_subunit_load_list_filters_items(pytester, tmp_path):
             pass
         """
     )
-    load_list = tmp_path / "tests.list"
+    # Keep the load list inside the test directory: a path outside it would
+    # push pytest's rootdir up and prefix the nodeids, so they would no longer
+    # match the entries here.
+    load_list = pytester.path / "tests.list"
     load_list.write_text(
         "test_load_list.py::test_one\ntest_load_list.py::test_three\n"
     )
